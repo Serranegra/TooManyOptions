@@ -1,5 +1,6 @@
 """Interface for drawing a payoff and obtaining its static replication."""
 
+from pathlib import Path
 import tkinter as tk
 from tkinter import messagebox, ttk
 
@@ -843,16 +844,25 @@ def main() -> None:
     welcome = ttk.Frame(root, padding=(32, 24))
     welcome.pack(fill=tk.BOTH, expand=True)
 
+    logo_path = Path(__file__).resolve().parent.parent / "assets" / "logo.png"
+    logo_image = tk.PhotoImage(file=str(logo_path)).subsample(25, 25)
+    header = ttk.Frame(welcome)
+    header.pack(fill=tk.X, pady=(0, 14))
+    logo = ttk.Label(header, image=logo_image)
+    logo.image = logo_image
+    logo.pack(side=tk.LEFT, padx=(0, 16))
+    heading = ttk.Frame(header)
+    heading.pack(side=tk.LEFT, fill=tk.X, expand=True)
     ttk.Label(
-        welcome,
+        heading,
         text="TooManyOptions",
         font=("TkDefaultFont", 24, "bold"),
-    ).pack(anchor=tk.W)
+    ).pack(anchor=tk.W, pady=(22, 0))
     ttk.Label(
-        welcome,
+        heading,
         text="Explore static replication of option payoffs",
         font=("TkDefaultFont", 13),
-        padding=(0, 4, 0, 14),
+        padding=(0, 4, 0, 0),
     ).pack(anchor=tk.W)
     ttk.Label(
         welcome,
