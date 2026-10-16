@@ -81,9 +81,12 @@ class SmoothPayoffDrawer:
         self.spot_entry.bind("<KeyRelease>", self._on_spot_changed)
         self._draw_axes()
         self._draw_spot_marker()
-        ttk.Button(controls, text="Clear", command=self.clear).pack(
+        ttk.Button(controls, text="Clear board", command=self.clear).pack(
             side=tk.LEFT
         )
+        ttk.Button(
+            controls, text="Reset settings", command=self.reset_settings
+        ).pack(side=tk.LEFT, padx=(6, 0))
         ttk.Button(
             controls,
             text="Calculate static replication",
@@ -315,6 +318,15 @@ class SmoothPayoffDrawer:
         self.canvas.delete("strike_bounds")
         self._draw_axes()
         self.status.configure(text=self._drawing_instructions())
+
+    def reset_settings(self) -> None:
+        """Restore the default price range and initial underlying price."""
+        self.min_price = 0.0
+        self.max_price = 200.0
+        self.spot_entry.delete(0, tk.END)
+        self.spot_entry.insert(0, "100")
+        self.clear()
+        self._update_strike_range_preview()
 
     def _drawing_instructions(self) -> str:
         """Describe the underlying-price and payoff ranges shown on the chart."""
@@ -883,7 +895,8 @@ def main() -> None:
             "2. Set the initial underlying price S₀. For market data, select a "
             "supported index ticker and choose Load ticker data first. This "
             "updates S₀ and centers the chart around the latest available "
-            "price; redraw the payoff after the chart range changes.\n"
+            "price; use Reset settings to return to the default S₀ = 100 "
+            "board, or Clear board to remove only the drawing.\n"
             "3. Use Calculate static replication for a dense theoretical strike "
             "grid, or select an expiration and a minimum daily volume before "
             "choosing Replicate with real options.",

@@ -1,4 +1,5 @@
 import unittest
+import tkinter as tk
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
@@ -180,6 +181,32 @@ class ChartPriceRangeTests(unittest.TestCase):
         self.assertEqual(chart.raw_points, [])
         chart.canvas.delete.assert_any_call("curve")
         chart.canvas.delete.assert_any_call("strike_bounds")
+
+    def test_reset_settings_restores_default_board_and_clears_drawing(self) -> None:
+        chart = SimpleNamespace(
+            min_price=175.0,
+            max_price=525.0,
+            raw_points=[(100, 200)],
+            spot_entry=Mock(),
+            canvas=Mock(),
+            _draw_axes=Mock(),
+            _drawing_instructions=Mock(return_value="default instructions"),
+            status=Mock(),
+            _update_strike_range_preview=Mock(),
+        )
+        chart.clear = lambda: SmoothPayoffDrawer.clear(chart)
+
+        SmoothPayoffDrawer.reset_settings(chart)
+
+        self.assertEqual(chart.min_price, 0.0)
+        self.assertEqual(chart.max_price, 200.0)
+        self.assertEqual(chart.raw_points, [])
+        chart.spot_entry.delete.assert_called_once_with(0, tk.END)
+        chart.spot_entry.insert.assert_called_once_with(0, "100")
+        chart.canvas.delete.assert_any_call("curve")
+        chart.canvas.delete.assert_any_call("strike_bounds")
+        chart._draw_axes.assert_called_once_with()
+        chart._update_strike_range_preview.assert_called_once_with()
 
     def test_strike_range_draws_and_labels_both_used_boundaries(self) -> None:
         chart = SimpleNamespace(
