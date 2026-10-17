@@ -121,7 +121,13 @@ The desktop workflow can also be launched directly with `python app.py`.
 
 For a sufficiently smooth target payoff $f(S_T)$, the static replication decomposition is
 
-$f(S_T) = \underbrace{f(S_0)-S_0 f'(S_0)}_{\text{fixed cash flow at expiration}} + f'(S_0)S_T + \int_0^{S_0} f''(K)(K-S_T)^+\,dK + \int_{S_0}^{\infty} f''(K)(S_T-K)^+\,dK$
+```math
+f(S_T) =
+\underbrace{f(S_0)-S_0 f'(S_0)}_{\text{fixed cash flow at expiration}}
++ f'(S_0)S_T
++ \int_0^{S_0} f''(K)(K-S_T)^+\,dK
++ \int_{S_0}^{\infty} f''(K)(S_T-K)^+\,dK
+```
 
 where $S_0$ is the initial underlying price, $S_T$ is its value at expiration, $K$ is an option strike, and $x^+=\max(x,0)$. The underlying position is $f'(S_0)$; the put and call positions approximate the two integrals using the payoff curvature $f''(K)$.
 
